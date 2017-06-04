@@ -61,7 +61,7 @@ class App extends Component {
       );
 
      result.api2.data.map(item =>
-      item.BankName = 'Llouds'
+      item.BankName = 'Lloyds'
       );
 
     let list = result.api1.data.concat(result.api2.data);  
@@ -69,11 +69,17 @@ class App extends Component {
 
     return (
       <div className="App">
+      <table>
+      <tbody>
         { list.map(item =>
-          <div key={item.ProductIdentifier}>
-          <p>{item.BankName} 
-          - {item.ProductName}</p></div>
+          <tr key={item.ProductIdentifier}>
+          <td>{item.BankName}</td>
+          <td>{item.ProductName}</td>
+          
+          </tr>
         )}
+        </tbody>
+        </table>
       </div>
     );
   }
