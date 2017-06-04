@@ -74,8 +74,12 @@ class App extends Component {
         { list.map(item =>
           <tr key={item.ProductIdentifier}>
           <td>{item.BankName}</td>
-          <td>{item.ProductName}</td>
-          
+          <td><a href={item.ProductURL} target="_blank" rel="noopener noreferrer">{item.ProductName}</a></td>
+          <td>{item.ProductSegment}</td>
+          <td>{item.OverdraftOffered ? 'Yes' : 'No'}</td>
+          <td>{item.CardWithdrawalLimit}</td>
+          <td>{item.Currency}</td>
+          <td>{item.ProductDescription}</td>
           </tr>
         )}
         </tbody>
