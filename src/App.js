@@ -31,17 +31,15 @@ class App extends Component {
       .then(response =>
         response.json());
 
+      
       let combinedData = {"api1":{},"api2":{}};
-
       Promise.all([apiReq1,apiReq2])
       .then(function(values){
-       combinedData["api1"] = values[0];
-       //console.log(values[0]);
-       //console.log(values[1]);
-       combinedData["api2"] = values[1];
-       //console.log(combinedData);
+      combinedData["api1"] = values[0];
+      combinedData["api2"] = values[1];
+      return combinedData;
         })
-      .then(this.setBankData(combinedData));
+      .then(combinedData => this.setBankData(combinedData));
 
 
 
@@ -55,22 +53,26 @@ class App extends Component {
   render() {
     const { result } = this.state;
 
-    if (!result) { return null ;}
+    if (result == null) { return null ;}
+    //console.log(result.api1.data);
 
-    const util = require('util')
+    result.api1.data.map(item =>
+      item.BankName = 'Halifax'
+      );
 
-    console.log(util.inspect(this.state, {showHidden: false, depth: null}));
+     result.api2.data.map(item =>
+      item.BankName = 'Llouds'
+      );
 
-    console.log(this.state);
-
-
-    let list = result;
-    //console.log(list);
+    let list = result.api1.data.concat(result.api2.data);  
+    console.log(list);
 
     return (
       <div className="App">
         { list.map(item =>
-          <div key={item.ProductIdentifier}><p>{item.ProductName}</p></div>
+          <div key={item.ProductIdentifier}>
+          <p>{item.BankName} 
+          - {item.ProductName}</p></div>
         )}
       </div>
     );
