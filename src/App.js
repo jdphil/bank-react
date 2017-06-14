@@ -22,9 +22,21 @@ class App extends Component {
     }
 
     fetchBankData(){
+          const options = {
+     headers: new Headers({'content-type': 'application/json'})
+   };
+
       let apiReq1 = fetch(HALIFAX)
-      .then(response =>
-        response.json());
+      .then(function(response){
+        var contentType = response.headers.get("content-type");
+        console.log(contentType);
+        return response.json().then(function(json) {
+            let ret = JSON.stringify(json);
+            ret = JSON.parse(ret);
+            return ret;
+        });
+
+});
       //.then(result => this.setBankData(result));
 
       let apiReq2 = fetch(LLOYDS)
@@ -56,8 +68,13 @@ class App extends Component {
     if (result == null) { return null ;}
     //console.log(result.api1.data);
 
-    result.api1.data.map(item =>
-      item.BankName = 'Halifax'
+    result.api1.data.map(item => 
+        item.BankName = 'Halifax'
+      );
+
+    result.api1.data.map(item => 
+      //console.log(item.ProductDescription)
+      item.ProductDescription = item.ProductDescription.replace('�','&amp;pound;')
       );
 
      result.api2.data.map(item =>
@@ -67,8 +84,11 @@ class App extends Component {
     let list = result.api1.data.concat(result.api2.data);  
     console.log(list);
 
+
+//todo - spilt into components
     return (
       <div className="App">
+      <SearchBar />
       <table>
       <tbody>
         { list.map(item =>
@@ -77,7 +97,7 @@ class App extends Component {
           <td><a href={item.ProductURL} target="_blank" rel="noopener noreferrer">{item.ProductName}</a></td>
           <td>{item.ProductSegment}</td>
           <td>{item.OverdraftOffered ? 'Yes' : 'No'}</td>
-          <td>{item.CardWithdrawalLimit}</td>
+          {/*<td>{item.CardWithdrawalLimit}</td>*/}
           <td>{item.Currency}</td>
           <td>{item.ProductDescription}</td>
           </tr>
@@ -88,5 +108,21 @@ class App extends Component {
     );
   }
 }
+
+class SearchBar extends React.Component {
+  render() {
+    return (
+      <form>
+        <input type="text" placeholder="Search..." />
+        <p>
+          <input type="checkbox" />
+          {' '}
+          Only show products in stock
+        </p>
+      </form>
+    );
+  }
+}
+
 
 export default App;
